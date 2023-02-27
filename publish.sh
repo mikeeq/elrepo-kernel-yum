@@ -11,7 +11,7 @@ DOCKER_CONTAINER_ID=$(docker run --ulimit nofile=1024000:1024000 --rm -d yum-rep
 echo >&2 "===]> Info: Make a zip file with repo content..."
 docker exec -t -u 0 "$DOCKER_CONTAINER_ID" /bin/bash -c '
 yum makecache
-yum install -y zip unzip curl cmake
+yum install -y zip unzip curl cmake python34
 cd /tmp
 curl -L https://github.com/libthinkpad/apindex/archive/refs/tags/2.2.zip -O
 unzip 2.2.zip
@@ -27,14 +27,7 @@ echo >&2 "===]> Info: Copy zip file to host..."
 docker cp "$DOCKER_CONTAINER_ID":/tmp/repo.zip /tmp/repo.zip
 
 echo >&2 "===]> Info: Change branch to gh-pages..."
-git fetch origin gh-pages
-git checkout gh-pages
-
-echo >&2 "===]> Info: Remove old RPMs..."
-rm -rfv ./*.rpm
-rm -rfv ./repodata
-rm -rfv ./index.html
-rm -rfv ./yum-repo
+git switch --orphan gh-pages
 
 echo >&2 "===]> Info: Copy zip file to repo..."
 cp -rfv /tmp/repo.zip ./
@@ -52,7 +45,7 @@ git config user.email "ci@github-actions.com"
 echo >&2 "===]> Info: Add, commit, push changes to gh-pages remote..."
 git add .
 git commit -m "Release: elrepo, date: $(date +'%Y%m%d_%H%M%S')"
-git push origin gh-pages
+git push origin gh-pages --force
 
 echo >&2 "===]> Info: Stop yum-repo container..."
 docker stop "$DOCKER_CONTAINER_ID"
