@@ -1,7 +1,5 @@
 FROM fedora:37
 
-ARG RELEASE_VERSION=6.2.0-f37
-
 WORKDIR /var/repo
 
 RUN dnf -y install \
