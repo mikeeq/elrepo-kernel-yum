@@ -51,7 +51,7 @@ git config user.email "ci@github-actions.com"
 
 echo >&2 "===]> Info: Add, commit, push changes to gh-pages remote..."
 git add .
-git commit -m "Release: $LATEST_RELEASE, date: $(date +'%Y%m%d_%H%M%S')"
+git commit -m "Release: elrepo, date: $(date +'%Y%m%d_%H%M%S')"
 git push origin gh-pages
 
 echo >&2 "===]> Info: Stop yum-repo container..."
