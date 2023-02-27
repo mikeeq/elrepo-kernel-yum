@@ -1,14 +1,21 @@
-FROM fedora:37
+FROM centos:6
 
 WORKDIR /var/repo
 
-RUN dnf -y install \
+RUN curl https://www.getpagespeed.com/files/centos6-eol.repo --output /etc/yum.repos.d/CentOS-Base.repo
+
+RUN yum makecache \
+    && yum install -y epel-release \
+    && yum makecache \
+    && yum -y install livecd-tools git
+
+RUN yum -y install \
     createrepo \
     wget \
     yum-utils \
     nginx \
     gettext \
-  && dnf clean all
+  && yum clean all
 
 ADD provision.sh /usr/bin/provision.sh
 

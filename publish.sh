@@ -3,15 +3,15 @@
 set -eu -o pipefail
 
 echo >&2 "===]> Info: Build yum-repo..."
-docker build -t yum-repo .
+docker build --ulimit nofile=1024000:1024000 -t yum-repo .
 
 echo >&2 "===]> Info: Run yum-repo in the background..."
-DOCKER_CONTAINER_ID=$(docker run --rm -d yum-repo)
+DOCKER_CONTAINER_ID=$(docker run --ulimit nofile=1024000:1024000 --rm -d yum-repo)
 
 echo >&2 "===]> Info: Make a zip file with repo content..."
 docker exec -t -u 0 "$DOCKER_CONTAINER_ID" /bin/bash -c '
-dnf makecache
-dnf install -y zip unzip curl cmake
+yum makecache
+yum install -y zip unzip curl cmake
 cd /tmp
 curl -L https://github.com/libthinkpad/apindex/archive/refs/tags/2.2.zip -O
 unzip 2.2.zip
