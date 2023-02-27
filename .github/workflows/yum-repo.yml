@@ -1,0 +1,17 @@
+---
+name: Update yum repo on GitHub Pages
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Update yum repo on GitHub Pages..."
+        run: ./publish.sh
